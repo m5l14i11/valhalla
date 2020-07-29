@@ -236,7 +236,10 @@ void GraphTile::Initialize(const GraphId& graphid, char* tile_ptr, const size_t 
                              " vs raw tile data size = " + std::to_string(tile_size) +
                              ". Tile file might me corrupted");
 
-  // TODO check version
+  if (header_->version().compare(0, 2, "3.") != 0) {
+    throw std::runtime_error(std::string("Wrong tile version, found ") + header_->version() +
+                             " but expected major version 3");
+  }
 
   // Set a pointer to the node list
   nodes_ = reinterpret_cast<NodeInfo*>(ptr);
